@@ -62,11 +62,10 @@ You can use code to output the model pred scores, the result will be save in the
 
 `python source/out_score_HLA.py`
 
->Evaluate TCR binding specificity using pTCR test set
+>Output pTCR pred scores:
 
 `python source/out_score_TCR.py`
 
-> In our practice, the time overhead required to run the two demos above is about 2 minutes when batch_size=8192.
 
 
 ### Hyperparameter adjustment
