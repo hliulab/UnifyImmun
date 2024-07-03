@@ -47,11 +47,24 @@ For the convenience of sequentially running all the training steps, you can use 
 Given your fine-tuned model or our trained model (saved in trained_model folder), you can evaluate it on our provided demo test set using the following test scripts.
 >Predict HLA binding specificity using pHLA test set
 
-`python HLA_test.py`
+`python source/HLA_test.py`
 
 >Evaluate TCR binding specificity using pTCR test set
 
-`python TCR_test.py`
+`python source/TCR_test.py`
+
+> In our practice, the time overhead required to run the two demos above is about 2 minutes when batch_size=8192.
+
+
+### Output pred score
+You can use code to output the model pred scores, the result will be save in the <kbd>data</kbd> folder
+>Output pHLA pred scores:
+
+`python source/out_score_HLA.py`
+
+>Evaluate TCR binding specificity using pTCR test set
+
+`python source/out_score_TCR.py`
 
 > In our practice, the time overhead required to run the two demos above is about 2 minutes when batch_size=8192.
 
