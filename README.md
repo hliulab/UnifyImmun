@@ -66,6 +66,10 @@ You can use code to output the model pred scores, the result will be save in the
 
 `python ./source/out_score_TCR.py --input ./data/data_TCR/independent_set  --output ./data/out_tcr_independent`
 
+>Output TCR-pMHC pred scores:
+
+`python ./source/out_score_triple.py --input ./data/data_HLA/HLA-antigen-TCR --output ./data/triple_score`
+
 
 
 ### Hyperparameter adjustment
