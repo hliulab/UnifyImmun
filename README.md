@@ -39,7 +39,7 @@ The input data should be a CSV file with three columns named `tcr`, `peptide`, a
 ### Model training
 For the convenience of sequentially running all the training steps, you can use the provided Python script named run_all_phases.py. After ensuring that the required environment and dependencies are installed, execute the following code:
 
-`python source/run_all_phases.py`
+`python ./source/run_all_phases.py`
 
 
 
@@ -47,11 +47,11 @@ For the convenience of sequentially running all the training steps, you can use 
 Given your fine-tuned model or our trained model (saved in trained_model folder), you can evaluate it on our provided demo test set using the following test scripts.
 >Predict HLA binding specificity using pHLA test set
 
-`python source/HLA_test.py`
+`python ./source/HLA_test.py`
 
 >Evaluate TCR binding specificity using pTCR test set
 
-`python source/TCR_test.py`
+`python ./source/TCR_test.py`
 
 > In our practice, the time overhead required to run the two demos above is about 2 minutes when batch_size=8192.
 
@@ -60,11 +60,11 @@ Given your fine-tuned model or our trained model (saved in trained_model folder)
 You can use code to output the model pred scores, the result will be save in the <kbd>data</kbd> folder
 >Output pHLA pred scores:
 
-`python source/out_score_HLA.py`
+`python ./source/out_score_HLA.py --input ./data/data_HLA/independent_set  --output ./data/out_hla_independent`
 
 >Output pTCR pred scores:
 
-`python source/out_score_TCR.py`
+`python ./source/out_score_TCR.py --input ./data/data_TCR/independent_set  --output ./data/out_tcr_independent`
 
 
 
