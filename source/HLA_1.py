@@ -228,13 +228,13 @@ for fold in range(1, 6):
     print('Load HLA Data:')
     train_loader = data_load_HLA(type_='train',fold=fold, batch_size=batch_size)
     val_loader = data_load_HLA(type_='val', fold=fold, batch_size=batch_size)
-    train_data = pd.read_csv('../data/data_HLA/train_fold_{}.csv'.format(fold))
-    val_data = pd.read_csv('../data/data_HLA/train_fold_{}.csv'.format(fold))
+    train_data = pd.read_csv('./data/data_HLA/train_fold_{}.csv'.format(fold))
+    val_data = pd.read_csv('./data/data_HLA/train_fold_{}.csv'.format(fold))
     print('Fold-{} Label: Train = {} | Val = {}'.format(fold, Counter(train_data.label), Counter(val_data.label)))
     print('HLA Train:')
-    path_all = '../trained_model/HLA_1'
-    save_path = '../trained_model/HLA_1/model_HLA_fold{}.pkl'.format( fold)
-    encoder_path = '../trained_model/HLA_1/encoder_P_{}.pth'.format(fold)
+    path_all = './trained_model/HLA_1'
+    save_path = './trained_model/HLA_1/model_HLA_fold{}.pkl'.format( fold)
+    encoder_path = './trained_model/HLA_1/encoder_P_{}.pth'.format(fold)
     print('save path: ', save_path)
     performance_best, epoch_best = 0, -1
     time_train = 0
