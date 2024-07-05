@@ -89,11 +89,11 @@ class MyDataSet_tcr(Data.Dataset):
 
 def data_load_tcr(type_='train', fold=None, batch_size=batch_size):
     if type_ != 'train' and type_ != 'val':
-        data = pd.read_csv('../data/data_TCR/{}_set.csv'.format(type_))
+        data = pd.read_csv('./data/data_TCR/{}_set.csv'.format(type_))
     elif type_ == 'train':
-        data = pd.read_csv('../data/data_TCR/train_fold_{}.csv'.format(fold))
+        data = pd.read_csv('./data/data_TCR/train_fold_{}.csv'.format(fold))
     elif type_ == 'val':
-        data = pd.read_csv('../data/data_TCR/val_fold_{}.csv'.format(fold))
+        data = pd.read_csv('./data/data_TCR/val_fold_{}.csv'.format(fold))
     pep_inputs, hla_inputs, labels = data_process_tcr(data)
     loader = Data.DataLoader(MyDataSet_tcr(pep_inputs, hla_inputs, labels), batch_size, shuffle=False, num_workers=0,drop_last=True)
     return loader
