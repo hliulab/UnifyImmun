@@ -9,7 +9,7 @@ import torch.utils.data as Data
 
 pep_max_len = 15
 hla_max_len = 34
-vocab = np.load('../data/data_dict.npy', allow_pickle=True).item()
+vocab = np.load('./data/data_dict.npy', allow_pickle=True).item()
 vocab_size = len(vocab)
 n_heads = 1
 d_model = 64
