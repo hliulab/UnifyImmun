@@ -137,8 +137,8 @@ train_fold_performance_list, val_fold_performance_list,independent_fold_performa
 triple_fold_metrics_list = []
 attention_train_dict, attention_val_dict, attention_independent_dict, attention_external_dict = {}, {}, {}, {}
 
-for fold in range(9, 10):
-    save_path = '../trained_model/TCR_2/model_TCR.pkl'
+for fold in range(1, 2):
+    save_path = './trained_model/TCR_2/model_TCR.pkl'
     # encoder_path = 'UnifyImmun/HLA_1/encoder_P_{}.pth'.format(fold)
     print('save path: ', save_path)
     performance_best, epoch_best = 0, -1
