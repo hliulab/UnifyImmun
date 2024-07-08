@@ -78,9 +78,11 @@ if __name__ == '__main__':
     model_eval_TCR = model_TCR.eval()
     pred_HLA = eval_step(model_eval_HLA, loader_hla)
     pred_TCR = eval_step(model_eval_TCR, loader_tcr)
+    tcr = tcr.head(len(pred_TCR))
     pep = pep.head(len(pred_HLA))
     hla = hla.head(len(pred_HLA))
     df = pd.DataFrame({
+        'tcr':tcr['tcr'].values,
         'peptide': pep['peptide'].values,
         'HLA': hla['HLA'].values,
         'HLA_pred': pred_HLA,
