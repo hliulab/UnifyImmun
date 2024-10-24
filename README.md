@@ -59,6 +59,21 @@ Given your fine-tuned model or our trained model (saved in trained_model folder)
 
 `python TCR_test.py`
 
+
+### Model testing for output prediction scores
+Given your fine - tuned model or our trained model (saved in trained_model folder), you can use it to output prediction scores on our provided demo test set with the following test scripts.
+>Output prediction scores for HLA binding specificity using pHLA test set
+
+`cd source`
+
+`python HLA_output_score.py`
+
+>Output prediction scores for TCR binding specificity using pTCR test set
+
+`cd source`
+
+`python TCR_output_score.py`
+
 > In our practice, the time overhead required to run the two demos above is about 2 minutes when batch_size=8192.
 
 
