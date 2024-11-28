@@ -1,6 +1,6 @@
 import time
 from models.TCR import *
-from scipy import interp
+#from scipy import interp
 import warnings
 import inputs as inputs_lib
 from collections import Counter
