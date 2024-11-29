@@ -1,7 +1,7 @@
 import time
 from models.HLA import *
 import random
-from scipy import interp
+#from scipy import interp
 import warnings
 import inputs as inputs_lib
 from collections import Counter
