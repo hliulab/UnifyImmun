@@ -123,7 +123,7 @@ train_fold_performance_list_tcr, val_fold_performance_list_tcr, independent_fold
 attention_train_dict, attention_val_dict, attention_independent_dict, attention_external_dict = {}, {}, {}, {}
 for fold in range(4, 5):
     print('Fold-{}:'.format(fold))
-    save_path_tcr = '../trained_model/TCR_2/model_TCR_2x.pkl'.format(fold)
+    save_path_tcr = '../trained_model/TCR_2/model_TCR.pkl'
     print('save path: ', save_path_tcr)
 
     print('-----Evaluate Results-----')
