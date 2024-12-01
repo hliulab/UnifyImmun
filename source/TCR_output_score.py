@@ -108,7 +108,7 @@ triple_loader = data_load_tcr(type_='triple', fold=None, batch_size=batch_size)
 
 
 for fold in [1]:
-    save_path = '../trained_model/TCR_2/model_TCR_2x.pkl'
+    save_path = '../trained_model/TCR_2/model_TCR.pkl'
     print('save path: ', save_path)
     performance_best, epoch_best = 0, -1
     time_train = 0
