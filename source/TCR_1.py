@@ -215,8 +215,8 @@ for fold in range(1, 6):
     print('Load TCR Data:')
     train_loader_tcr = data_load_tcr(type_='train', fold=fold, batch_size=batch_size)
     val_loader_tcr = data_load_tcr(type_='val', fold=fold, batch_size=batch_size)
-    train_data_tcr = pd.read_csv('../data/new_data_TCR_10x/train_fold_{}.csv'.format(fold)).dropna()
-    val_data_tcr = pd.read_csv('../data/new_data_TCR_10x/val_fold_{}.csv'.format(fold)).dropna()
+    train_data_tcr = pd.read_csv('../data/data_TCR/train_fold_{}.csv'.format(fold)).dropna()
+    val_data_tcr = pd.read_csv('../data/data_TCR/val_fold_{}.csv'.format(fold)).dropna()
     print('Fold-{} Label: Train = {} | Val = {}'.format(fold, Counter(train_data_tcr.label),Counter(val_data_tcr.label)))
     print('TCR Train:')
     path_all_tcr = '../trained_model/TCR_1'
