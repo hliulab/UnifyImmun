@@ -1,13 +1,8 @@
 import time
 from models.TCR import *
-from scipy import interp
 import warnings
-import inputs as inputs_lib
 from collections import Counter
-from functools import reduce
-#import tensorflow
-from tqdm import tqdm, trange
-from copy import deepcopy
+from tqdm import tqdm
 from sklearn.metrics import confusion_matrix,matthews_corrcoef
 from sklearn.metrics import roc_auc_score, auc,accuracy_score,f1_score
 from sklearn.metrics import precision_recall_curve,precision_score,recall_score
@@ -15,12 +10,8 @@ import os
 import torch
 import torch.nn as nn
 import torch.optim as optim
-import torch.utils.data as Data
-from sklearn.model_selection import train_test_split
+
 warnings.filterwarnings("ignore")
-
-
-
 seed = 66
 random.seed(seed)
 np.random.seed(seed)
@@ -40,27 +31,9 @@ d_k = d_v = 64
 n_layers = 1
 threshold = 0.5
 use_cuda = torch.cuda.is_available()
-# device = torch.device("cuda:0" if use_cuda else "cpu")
 model_tcr = Mymodel_tcr().to(device)
 criterion_tcr = nn.CrossEntropyLoss()
 optimizer_tcr = optim.Adam(model_tcr.parameters(), lr=1e-3)
-
-
-def with_pos_embed(tensor, pos: Optional[Tensor]):
-    return tensor if pos is None else tensor + pos
-
-def _get_clones(module, n):
-    return nn.ModuleList([copy.deepcopy(module) for i in range(n)])
-
-def _get_activation_fn(activation):
-    """Return an activation function given a string"""
-    if activation == "relu":
-        return nn.functional.relu
-    if activation == "gelu":
-        return nn.functional.gelu
-    if activation == "glu":
-        return nn.functional.glu
-    raise RuntimeError(F"activation should be relu/gelu, not {activation}.")
 
 
 def performance(y_true, y_pred,y_pred_transfer):
@@ -82,24 +55,15 @@ def performance(y_true, y_pred,y_pred_transfer):
                                                                                           specificity, accuracy,mcc
                                                                                           ))
     print('precision={:.4f}|recall={:.4f}|f1={:.4f}|aupr={:.4f}'.format(precision, recall, f1, aupr))
-
     return (roc_auc, accuracy, mcc, f1, aupr,sensitivity, specificity, precision, recall )
-
-
-
 
 f_mean = lambda l: sum(l) / len(l)
 
-
-
-
 def performance_pd(performances_list):
     metrics_name = ['roc_auc', 'accuracy', 'mcc', 'f1', 'aupr', 'sensitivity', 'specificity', 'precision', 'recall']
-
     performance_pd = pd.DataFrame(performances_list, columns=metrics_name)
     performance_pd.loc['mean'] = performance_pd.mean(axis=0)
     performance_pd.loc['std'] = performance_pd.std(axis=0)
-
     return performance_pd
 
 class FGM():
@@ -107,23 +71,18 @@ class FGM():
         self.model = model
         self.backup1 = {}
         self.backup2 = {}
-
     def attack(self, epsilon=1., emb_name='emb'):
-        # emb_name这个参数要换成你模型中embedding的参数名
-        # 例如，self.emb = nn.Embedding(5000, 100)
         for name, param in self.model.named_parameters():
             if param.requires_grad and emb_name in name:
                 if emb_name == 'encoder_T.src_emb':
                     self.backup1[name] = param.data.clone()
                 if emb_name == 'encoder_P.src_emb':
                     self.backup2[name] = param.data.clone()
-                norm = torch.norm(param.grad) # 默认为2范数
+                norm = torch.norm(param.grad)
                 if norm != 0:
                     r_at = epsilon * param.grad / norm
                     param.data.add_(r_at)
-
     def restore(self, emb_name='emb'):
-        # emb_name这个参数要换成你模型中embedding的参数名
         for name, param in self.model.named_parameters():
             if param.requires_grad and emb_name in name:
 
@@ -137,10 +96,7 @@ class FGM():
             self.backup1 = {}
         if emb_name == 'encoder_P.src_emb':
             self.backup2 = {}
-
-
 def train_tcr(model, train_loader, fold, epoch, epochs):
-    model.encoder_P.load_state_dict(torch.load('../trained_model/HLA_1/encoder_P_{}.pth'.format(fold)))
     train_time = 0
     model.train()
     y_true_list, y_pred_list,attention_list = [], [],[]
@@ -157,11 +113,11 @@ def train_tcr(model, train_loader, fold, epoch, epochs):
         fgm.attack(emb_name='encoder_P.src_emb')
         train_outputs2, train_dec_self_attns2 = model(train_pep_inputs, train_tcr_inputs)
         loss_sum = criterion_tcr(train_outputs2, train_labels)
-        loss_sum.backward()  # 反向传播，在正常的grad基础上，累加对抗训练的梯度
+        loss_sum.backward()
         fgm.restore(emb_name='encoder_T.src_emb')
         fgm.restore(emb_name='encoder_P.src_emb')
-        optimizer_tcr.step()       #更新模型参数
-        optimizer_tcr.zero_grad()  #将所有参数的梯度清零
+        optimizer_tcr.step()
+        optimizer_tcr.zero_grad()
         y_true_train = train_labels.cpu().numpy()
         y_pred_train = nn.Softmax(dim=1)(train_outputs)[:, 1].cpu().detach().numpy()
         y_true_list.extend(y_true_train)
@@ -175,7 +131,6 @@ def train_tcr(model, train_loader, fold, epoch, epochs):
     return result_train, performance_train, train_time, attention_list
 
 def valid_tcr(model, val_loader, fold, epoch, epochs):
-
     model.eval()
     torch.manual_seed(66)
     torch.cuda.manual_seed(66)
@@ -189,7 +144,6 @@ def valid_tcr(model, val_loader, fold, epoch, epochs):
             y_true_val = val_labels.cpu().numpy()
             y_pred_val = nn.Softmax(dim=1)(val_outputs)[:, 1].cpu().detach().numpy()
             y_true_val_list.extend(y_true_val)
-            # y_true_val_list.extend(y_true_val)
             y_pred_val_list.extend(y_pred_val)
             loss_val_list.append(val_loss)
         y_pred_transfer_val_list = transfer(y_pred_val_list, threshold)
@@ -200,18 +154,17 @@ def valid_tcr(model, val_loader, fold, epoch, epochs):
     return result_val, performance_val, cross_attention_val
 
 independent_loader_tcr = data_load_tcr(type_='independent', fold=None, batch_size=batch_size)
-covid_loader_tcr= data_load_tcr(type_='covid', fold=None, batch_size=batch_size)
+covid_loader_tcr = data_load_tcr(type_='covid', fold=None, batch_size=batch_size)
 tripple_loader_tcr = data_load_tcr(type_='triple', fold=None, batch_size=batch_size)
 
-
-
-
-
 train_fold_performance_list_tcr, val_fold_performance_list_tcr, independent_fold_performance_list_tcr, covid_fold_performance_list_tcr, tripple_fold_performance_list_tcr = [], [], [], [], []
-
 attention_train_dict, attention_val_dict, attention_independent_dict, attention_external_dict = {}, {}, {}, {}
+
 for fold in range(1, 6):
     print('Fold-{}:'.format(fold))
+    print('Load Encoder {}'.format(fold))
+    model_tcr.encoder_P.load_state_dict(torch.load('../trained_model/HLA_1/encoder_P_{}.pth'.format(fold)))
+
     print('Load TCR Data:')
     train_loader_tcr = data_load_tcr(type_='train', fold=fold, batch_size=batch_size)
     val_loader_tcr = data_load_tcr(type_='val', fold=fold, batch_size=batch_size)
@@ -256,9 +209,9 @@ for fold in range(1, 6):
 end_time = time.time()
 use_time = end_time-start_time
 print('Use Time:{:6.2f}seconds'.format(use_time))
-print('****new_data_TCR_10x Independent set:')
+print('****TCR Independent set:')
 print(performance_pd(independent_fold_performance_list_tcr).to_string())
-print('****new_data_TCR_10x Covid set:')
+print('****TCR Covid set:')
 print(performance_pd(covid_fold_performance_list_tcr).to_string())
-print('****new_data_TCR_10x Triple set:')
+print('****TCR Triple set:')
 print(performance_pd(tripple_fold_performance_list_tcr).to_string())
