@@ -48,9 +48,8 @@ For the convenience of sequentially running all the training steps, you can use 
 `python run_all_phases.py`
 
 
-
 ### Model testing
-Given your fine-tuned model or our trained model (saved in trained_model folder), you can evaluate it on our provided demo test set using the following test scripts.
+Given the fine-tuned model or our trained model (saved in trained_model folder), you can evaluate it on our demo test sets using the following scripts.
 >Predict HLA binding specificity using pHLA test set
 
 `cd source`
@@ -64,9 +63,9 @@ Given your fine-tuned model or our trained model (saved in trained_model folder)
 `python TCR_test.py`
 
 
-### Model testing for output prediction scores
-Given your fine - tuned model or our trained model (saved in trained_model folder), you can use it to output prediction scores on our provided demo test set with the following test scripts.
->Output prediction scores for HLA binding specificity using pHLA test set
+### Output predicted scores
+Given the fine-tuned model or our trained model (saved in trained_model folder), you can output predicted scores for the demo test sets using the following scripts.
+>Output predicted scores for HLA binding specificity using pHLA test set
 
 `cd source`
 
@@ -78,7 +77,7 @@ Given your fine - tuned model or our trained model (saved in trained_model folde
 
 `python TCR_output_score.py`
 
-> In our practice, the time overhead required to run the two demos above is about 2 minutes when batch_size=8192.
+> In our practice, the time overhead required to run these two demos above is about 2 minutes when batch_size=8192.
 
 
 ### Hyperparameter adjustment
